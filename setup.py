@@ -17,6 +17,7 @@ setup(
                                     'core/src/utilities.c',
                                     'core/src/matrix.c',
                                     'core/src/data_structure.c',
+                                    'core/src/mathtool.c',
                                 ],
                                 include_dirs = ['core/include/'])
                             ]

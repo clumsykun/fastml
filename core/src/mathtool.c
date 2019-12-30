@@ -21,7 +21,7 @@ double information_entropy_by_counter(ClassCounter *counter)
 
 
 /* 计算一个数组的香农熵 */
-double information_entropy(unsigned int *array, size_t size)
+double information_entropy(unsigned long *array, size_t size)
 {
     ClassCounter *counter = class_counter_create();
 
@@ -34,7 +34,7 @@ double information_entropy(unsigned int *array, size_t size)
 }
 
 /* 在有标签的情况下计算信息熵，用于计算信息增益 */
-double information_entropy_with_label(unsigned int *Y_arr, unsigned int *prop_arr, size_t size)
+double information_entropy_with_prop(unsigned long *Y_arr, unsigned long *prop_arr, size_t size)
 {
     ClassCounter *counter_prop = class_counter_create();
     ClassCounter *counter_class = class_counter_create();

@@ -11,6 +11,7 @@
 #include "matrix.h"
 #include "utilities.h"
 #include "data_structure.h"
+#include "mathtool.h"
 
 /** ====================================================================================================
  * test
@@ -343,18 +344,84 @@ core_class_counter(PyObject *self, PyObject *args)
 }
 
 
+static PyObject*
+core_information_entropy(PyObject *self, PyObject *args)
+{
+    PyObject *obj;
+    if (!PyArg_ParseTuple (args, "O!", &PyArray_Type, &obj))
+        return NULL;
+
+    if ( !PyArray_ISUNSIGNED( (PyArrayObject *)obj ) ) {  /*不是无符号整数的情况*/
+        PyErr_SetString(PyExc_ValueError, "输入的类型必需为无符号整型！");
+        return NULL;
+    }
+
+    PyArrayObject *arr_obj = (PyArrayObject *)PyArray_FROM_OTF(
+        obj,        /* 传入数据 */
+        NPY_ULONG,  /* 传入数据类型为 unsigned long */
+        NPY_ARRAY_ALIGNED
+    );
+
+    if (arr_obj == NULL) {
+        /* 处理意外情况 */
+    }
+
+    npy_intp size = PyArray_SIZE(arr_obj);
+    unsigned long *data = (unsigned long *)PyArray_DATA(arr_obj);
+
+    double entropy = information_entropy(data, (unsigned int)size);
+
+    return Py_BuildValue("f", entropy);
+}
+
+
+static PyObject*
+core_information_entropy_with_prop(PyObject *self, PyObject *args)
+{
+    PyArrayObject *y, *properties;
+    if ( !PyArg_ParseTuple(args, "O!O!", &PyArray_Type, &y, &PyArray_Type, &properties) )
+        return NULL;
+
+    if ( !PyArray_ISUNSIGNED(y) ) {  /*不是无符号整数的情况*/
+        PyErr_SetString(PyExc_ValueError, "输入的类型必需为无符号整型！");
+        return NULL;
+    }
+
+    if ( !PyArray_ISUNSIGNED(properties) ) {  /*不是无符号整数的情况*/
+        PyErr_SetString(PyExc_ValueError, "输入的类型必需为无符号整型！");
+        return NULL;
+    }
+
+    npy_intp y_size = PyArray_SIZE(y);
+    npy_intp properties_size = PyArray_SIZE(properties);
+
+    if (y_size != properties_size) {
+        PyErr_SetString(PyExc_ValueError, "输入的数组长度不相等！");
+        return NULL;
+    }
+
+    unsigned long *y_data = (unsigned long *)PyArray_DATA(y);
+    unsigned long *prop_data = (unsigned long *)PyArray_DATA(properties);
+
+    double entropy = information_entropy_with_prop(y_data, prop_data, y_size);
+    return Py_BuildValue("f", entropy);
+}
+
+
 /** ====================================================================================================
  * Module Define
  **/
 
 static PyMethodDef
 core_methods[] = {
-    {"test",           core_test,           METH_VARARGS, "test(x, y, z)"},
-    {"test_dict",      core_test_dict,      METH_VARARGS, "test dict"},
-    {"test_class",     core_test_class,     METH_VARARGS, "test python class"},
-    {"test_include",   core_test_include,   METH_VARARGS, "test python class"},
-    {"col_variance",   core_col_variance,   METH_VARARGS, "输入一个矩阵，返回列的方差"},
-    {"class_counter",  core_class_counter,  METH_VARARGS, "计算一个字符数组的大小"},
+    {"test",                          core_test,                           METH_VARARGS, "test(x, y, z)"},
+    {"test_dict",                     core_test_dict,                      METH_VARARGS, "test dict"},
+    {"test_class",                    core_test_class,                     METH_VARARGS, "test python class"},
+    {"test_include",                  core_test_include,                   METH_VARARGS, "test python class"},
+    {"col_variance",                  core_col_variance,                   METH_VARARGS, "输入一个矩阵，返回列的方差"},
+    {"class_counter",                 core_class_counter,                  METH_VARARGS, "计算一个字符数组的大小"},
+    {"information_entropy",           core_information_entropy,            METH_VARARGS, "计算一个字符数组的大小"},
+    {"information_entropy_with_prop", core_information_entropy_with_prop,  METH_VARARGS, "计算一个字符数组的大小"},
     {NULL, NULL, 0, NULL},
 };
 
