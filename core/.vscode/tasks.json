@@ -1,0 +1,28 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "gcc build active file",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-g",
+                "${file}",
+                "/root/workspace/core/src/data_structure.c",
+                "/root/workspace/core/src/mathtool.c",
+                "/root/workspace/core/src/matrix.c",
+                "/root/workspace/core/src/utils.c",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.o",
+                "-std=c99",
+                "-I/usr/include/python3.6m/",
+                "-I/root/workspace/core/include/",
+                "-lpython3.6m",
+                "-lm"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            }
+        }
+    ],
+    "version": "2.0.0"
+}
