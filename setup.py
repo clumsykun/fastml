@@ -13,12 +13,12 @@ setup(
                             Extension(
                                 '_fastmlcore',
                                 sources = [
-                                    'core/src/core_module.c',
-                                    'core/src/utilities.c',
-                                    'core/src/matrix.c',
-                                    'core/src/data_structure.c',
-                                    'core/src/mathtool.c',
+                                    '_fastmlcore/src/core_module.c',
+                                    '_fastmlcore/src/utilities.c',
+                                    '_fastmlcore/src/matrix.c',
+                                    '_fastmlcore/src/data_structure.c',
+                                    '_fastmlcore/src/mathtool.c',
                                 ],
-                                include_dirs = ['core/include/'])
+                                include_dirs = ['_fastmlcore/include/'])
                             ]
       )

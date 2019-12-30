@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import fastml.core as core
+from fastml import core
 from decision_tree import DecisionTree
 
 
