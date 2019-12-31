@@ -19,7 +19,6 @@ double information_entropy_by_counter(ClassCounter *counter)
     return entropy;
 }
 
-
 /* 计算一个数组的香农熵 */
 double information_entropy(unsigned long *array, size_t size)
 {
@@ -85,4 +84,3 @@ unsigned int *random_array_int(unsigned int min, unsigned int max, size_t size, 
     }
     return array;
 }
-
