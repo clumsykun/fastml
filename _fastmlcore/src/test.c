@@ -29,7 +29,6 @@ int test_information_entropy_with_label()
     return 0;
 }
 
-
 int test_class_counter()
 {
 
@@ -54,7 +53,6 @@ int test_class_counter()
     return 0;
 }
 
-
 int test_col_variance()
 {
     size_t nRow = 5;
@@ -67,6 +65,11 @@ int test_col_variance()
     print_matrix(X, nRow, nCol);
     double *Y = col_variance(X, nRow, nCol);
     print_matrix(Y, 1, nCol);
+    return 0;
+}
+
+int test_find_best_discrete_prop()
+{
     return 0;
 }
 
