@@ -376,7 +376,7 @@ core_information_entropy(PyObject *self, PyObject *args)
 
 
 static PyObject*
-core_information_entropy_with_prop(PyObject *self, PyObject *args)
+core_info_entropy_discrete_prop(PyObject *self, PyObject *args)
 {
     PyArrayObject *y, *properties;
     if ( !PyArg_ParseTuple(args, "O!O!", &PyArray_Type, &y, &PyArray_Type, &properties) )
@@ -403,7 +403,7 @@ core_information_entropy_with_prop(PyObject *self, PyObject *args)
     unsigned long *y_data = (unsigned long *)PyArray_DATA(y);
     unsigned long *prop_data = (unsigned long *)PyArray_DATA(properties);
 
-    double entropy = information_entropy_with_prop(y_data, prop_data, y_size);
+    double entropy = info_entropy_discrete_prop(y_data, prop_data, y_size);
     return Py_BuildValue("f", entropy);
 }
 
@@ -414,14 +414,14 @@ core_information_entropy_with_prop(PyObject *self, PyObject *args)
 
 static PyMethodDef
 core_methods[] = {
-    {"test",                          core_test,                           METH_VARARGS, "test(x, y, z)"},
-    {"test_dict",                     core_test_dict,                      METH_VARARGS, "test dict"},
-    {"test_class",                    core_test_class,                     METH_VARARGS, "test python class"},
-    {"test_include",                  core_test_include,                   METH_VARARGS, "test python class"},
-    {"col_variance",                  core_col_variance,                   METH_VARARGS, "输入一个矩阵，返回列的方差"},
-    {"class_counter",                 core_class_counter,                  METH_VARARGS, "计算一个字符数组的大小"},
-    {"information_entropy",           core_information_entropy,            METH_VARARGS, "计算一个字符数组的大小"},
-    {"information_entropy_with_prop", core_information_entropy_with_prop,  METH_VARARGS, "计算一个字符数组的大小"},
+    {"test",                       core_test,                           METH_VARARGS, "test(x, y, z)"},
+    {"test_dict",                  core_test_dict,                      METH_VARARGS, "test dict"},
+    {"test_class",                 core_test_class,                     METH_VARARGS, "test python class"},
+    {"test_include",               core_test_include,                   METH_VARARGS, "test python class"},
+    {"col_variance",               core_col_variance,                   METH_VARARGS, "输入一个矩阵，返回列的方差"},
+    {"class_counter",              core_class_counter,                  METH_VARARGS, "计算一个字符数组的大小"},
+    {"information_entropy",        core_information_entropy,            METH_VARARGS, "计算一个字符数组的大小"},
+    {"info_entropy_discrete_prop", core_info_entropy_discrete_prop,  METH_VARARGS, "计算一个字符数组的大小"},
     {NULL, NULL, 0, NULL},
 };
 
