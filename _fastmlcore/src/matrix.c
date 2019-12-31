@@ -51,3 +51,8 @@ double *col_variance(double *matrix, size_t nRow, size_t nCol)
     return variance;
 }
 
+/* 返回最佳的分裂属性索引，其中列是属性，行是样本 */
+unsigned long find_best_discrete_prop(unsigned long *matirx, unsigned long *class, size_t n_row, size_t n_col)
+{
+    return 0;
+}
