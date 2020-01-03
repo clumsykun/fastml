@@ -1,4 +1,8 @@
 {
-    "python.pythonPath": "/usr/local/anaconda3/bin/python"
+    "python.pythonPath": "/usr/local/anaconda3/bin/python",
+    "files.associations": {
+        "arrayobject.h": "c",
+        "ndarrayobject.h": "c"
+    }
     // "C_Cpp.errorSquiggles": "Disabled"
 }
