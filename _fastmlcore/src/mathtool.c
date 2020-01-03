@@ -2,7 +2,6 @@
  * 数学工具
  **/
 
-
 #include "mathtool.h"
 
 

@@ -7,9 +7,30 @@
 #include "data_structure.h"
 
 
-void print_matrix(double *matrix, size_t nRow, size_t nCol);
-double *col_variance(double *matrix, size_t nRow, size_t nCol);
-unsigned long find_best_discrete_prop(unsigned long *matirx, unsigned long *class, size_t n_row, size_t n_col);
+typedef enum _MatDType {
+    ULONG = 0,
+    DOUBLE,
+} MatDType;
+
+/* double matrix */
+typedef struct _MatrixDouble {
+    size_t row;     /* 行数 */
+    size_t col;     /* 列数 */
+    MatDType dtype;
+    double *data;
+} MatrixDouble;
+
+typedef struct _MatrixULong {
+    size_t row;     /* 行数 */
+    size_t col;     /* 列数 */
+    MatDType dtype;
+    unsigned long *data;
+} MatrixULong;
+
+void print_matrix(void *matrix, MatDType dtype);
+int transpose(void *_matrix, MatDType dtype);
+unsigned long find_best_discrete_prop(unsigned long *matirx, unsigned long *class, size_t n_sample, size_t n_prop);
+int contiguous_c_to_f(void *matrix, MatDType dtype);
 
 
 #endif	/* matrix_h */
