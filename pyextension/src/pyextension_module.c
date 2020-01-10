@@ -385,7 +385,7 @@ pyextension_methods[] = {
     {"test_include",               pyextension_test_include,                   METH_VARARGS, "test python class"},
     {"class_counter",              pyextension_class_counter,                  METH_VARARGS, "计算一个字符数组的大小"},
     {"information_entropy",        pyextension_information_entropy,            METH_VARARGS, "计算一个字符数组的大小"},
-    {"info_entropy_discrete_prop", pyextension_info_entropy_discrete_prop,  METH_VARARGS, "计算一个字符数组的大小"},
+    {"info_entropy_discrete_prop", pyextension_info_entropy_discrete_prop,     METH_VARARGS, "计算一个字符数组的大小"},
     {NULL, NULL, 0, NULL},
 };
 
