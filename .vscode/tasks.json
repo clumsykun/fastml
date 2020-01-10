@@ -7,10 +7,8 @@
             "args": [
                 "-g",
                 "${file}",
-                "/root/workspace/pyextension/pyextension/src/data_structure.c",
-                "/root/workspace/pyextension/pyextension/src/mathtool.c",
-                "/root/workspace/pyextension/pyextension/src/matrix.c",
                 "/root/workspace/pyextension/pyextension/src/utils.c",
+                "/root/workspace/pyextension/pyextension/src/pyfunc.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}.o",
                 "-std=c99",

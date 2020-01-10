@@ -1,26 +1,20 @@
 
-#include <Python.h>
-#include <stdio.h>
-#include <stddef.h>
+#include "pyfunc.h"
 
-static PyObject *
-test_dict()
+int test_string_findall()
 {
-    int if_contain;
-    size_t num;
-    PyObject *city = PyDict_New();
-    PyDict_SetItemString(city, "shanghai", PyUnicode_FromString("china"));
-    if_contain = PyDict_Contains(city, PyUnicode_FromString("shanghai"));
-    PyDict_Clear(city);
-    if_contain = PyDict_Contains(city, PyUnicode_FromString("shanghai"));
-    return NULL;
+    char *source = "上海abcaaabcaabcbca";
+    char *target = "上海";
+
+    PyObject *result = string_findall(source, target);
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
     Py_Initialize();
     PyRun_SimpleString("print('Hello Python!')\n");
-    test_dict();
+    test_string_findall();
     Py_Finalize();
     return 0;
 }
