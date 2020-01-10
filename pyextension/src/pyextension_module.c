@@ -18,7 +18,7 @@
  **/
 
 static PyObject *
-core_test(PyObject *self, PyObject *args)
+pyextension_test(PyObject *self, PyObject *args)
 {
     /* 用来保存从 python 传入的参数 */
     PyObject *X_from_python = NULL;
@@ -103,7 +103,7 @@ fail:  /* 错误 */
 }
 
 static PyObject *
-core_test_dict(PyObject *self, PyObject *args)
+pyextension_test_dict(PyObject *self, PyObject *args)
 {
     PyObject *X_python;
     if (!PyArg_ParseTuple(args, "O!", &PyDict_Type, &X_python))
@@ -120,7 +120,7 @@ core_test_dict(PyObject *self, PyObject *args)
 }
 
 static PyObject *
-core_test_class(PyObject *self, PyObject *args)
+pyextension_test_class(PyObject *self, PyObject *args)
 {
     PyObject *X_python;
     if (!PyArg_ParseTuple(args, "O", &X_python))
@@ -143,7 +143,7 @@ core_test_class(PyObject *self, PyObject *args)
 }
 
 static PyObject *
-core_test_include(PyObject *self, PyObject *args)
+pyextension_test_include(PyObject *self, PyObject *args)
 {
     /* 用来保存从 python 传入的参数 */
     PyObject *X_from_python = NULL;
@@ -266,46 +266,11 @@ static void *logit_data[] = {NULL, NULL, NULL};
 
 
 /** ====================================================================================================
- * ufunc: col_variance
+ * ufunc:
  **/
 
 static PyObject*
-core_col_variance(PyObject *self, PyObject *args)
-{
-    /* 用来保存从 python 传入的参数 */
-    PyObject *X_from_python = NULL;
-
-    if (!PyArg_ParseTuple (args, "O!", &PyArray_Type, &X_from_python))
-        return NULL;
-
-    PyArrayObject *X_numpy = (PyArrayObject *)X_from_python;
-
-    if (X_numpy == NULL) return NULL;
-    int X_nd = PyArray_NDIM(X_numpy);
-    if (X_nd !=2 ) return NULL;  /* 只对二维数组可用 */
-
-    npy_intp *X_shape = PyArray_SHAPE(X_numpy);
-    double *X_data = (double *)PyArray_DATA(X_numpy);
-
-    double *Y_data = col_variance(X_data, X_shape[0], X_shape[1]);
-
-    /**
-     * 返回结果
-     **/
-    int nd = 1;
-    npy_intp dims[] = {X_shape[1]};
-    PyObject *Y = PyArray_SimpleNewFromData(
-        nd,
-        dims,
-        NPY_DOUBLE,
-        Y_data
-    );
-
-    return Y;
-}
-
-static PyObject*
-core_class_counter(PyObject *self, PyObject *args)
+pyextension_class_counter(PyObject *self, PyObject *args)
 {
     PyObject *X_obj, *result;
     if (!PyArg_ParseTuple (args, "O!", &PyArray_Type, &X_obj))
@@ -345,7 +310,7 @@ core_class_counter(PyObject *self, PyObject *args)
 
 
 static PyObject*
-core_information_entropy(PyObject *self, PyObject *args)
+pyextension_information_entropy(PyObject *self, PyObject *args)
 {
     PyObject *obj;
     if (!PyArg_ParseTuple (args, "O!", &PyArray_Type, &obj))
@@ -376,7 +341,7 @@ core_information_entropy(PyObject *self, PyObject *args)
 
 
 static PyObject*
-core_info_entropy_discrete_prop(PyObject *self, PyObject *args)
+pyextension_info_entropy_discrete_prop(PyObject *self, PyObject *args)
 {
     PyArrayObject *y, *properties;
     if ( !PyArg_ParseTuple(args, "O!O!", &PyArray_Type, &y, &PyArray_Type, &properties) )
@@ -413,26 +378,25 @@ core_info_entropy_discrete_prop(PyObject *self, PyObject *args)
  **/
 
 static PyMethodDef
-core_methods[] = {
-    {"test",                       core_test,                           METH_VARARGS, "test(x, y, z)"},
-    {"test_dict",                  core_test_dict,                      METH_VARARGS, "test dict"},
-    {"test_class",                 core_test_class,                     METH_VARARGS, "test python class"},
-    {"test_include",               core_test_include,                   METH_VARARGS, "test python class"},
-    {"col_variance",               core_col_variance,                   METH_VARARGS, "输入一个矩阵，返回列的方差"},
-    {"class_counter",              core_class_counter,                  METH_VARARGS, "计算一个字符数组的大小"},
-    {"information_entropy",        core_information_entropy,            METH_VARARGS, "计算一个字符数组的大小"},
-    {"info_entropy_discrete_prop", core_info_entropy_discrete_prop,  METH_VARARGS, "计算一个字符数组的大小"},
+pyextension_methods[] = {
+    {"test",                       pyextension_test,                           METH_VARARGS, "test(x, y, z)"},
+    {"test_dict",                  pyextension_test_dict,                      METH_VARARGS, "test dict"},
+    {"test_class",                 pyextension_test_class,                     METH_VARARGS, "test python class"},
+    {"test_include",               pyextension_test_include,                   METH_VARARGS, "test python class"},
+    {"class_counter",              pyextension_class_counter,                  METH_VARARGS, "计算一个字符数组的大小"},
+    {"information_entropy",        pyextension_information_entropy,            METH_VARARGS, "计算一个字符数组的大小"},
+    {"info_entropy_discrete_prop", pyextension_info_entropy_discrete_prop,  METH_VARARGS, "计算一个字符数组的大小"},
     {NULL, NULL, 0, NULL},
 };
 
 
 static PyModuleDef
-core_module = { 
+pyextension_module = { 
     PyModuleDef_HEAD_INIT,
     "_fastmlcore",
     NULL,
     -1,
-    core_methods,
+    pyextension_methods,
     NULL,
     NULL,
     NULL,
@@ -443,10 +407,10 @@ core_module = {
 /* PyMODINIT_FUNC 最后定义 */
 
 PyMODINIT_FUNC
-PyInit__fastmlcore(void)
+PyInit_pyextension(void)
 {
     PyObject *m, *logit, *d;
-    m = PyModule_Create(&core_module);
+    m = PyModule_Create(&pyextension_module);
     if (!m) {
         return NULL;  /* 防止错误 */
     }

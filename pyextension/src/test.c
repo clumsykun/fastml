@@ -89,7 +89,7 @@ int test_find_best_discrete_prop()
     contiguous_c_to_f(matrix, matrix->dtype);
     print_matrix(matrix, matrix->dtype);
 
-    find_best_discrete_prop(matrix, matrix->dtype);
+    // find_best_discrete_prop(matrix, matrix->dtype);
 
     return 0;
 }
