@@ -1,8 +1,7 @@
-#ifndef utils_h
-#define utils_h
+#ifndef UTILS_H
+#define UTILS_H
 
-#include <Python.h>
 
-#define print_obj(x) PyObject_Print(x, stdout, Py_PRINT_RAW);
 
-#endif	/* utils_h */
+
+#endif	/* UTILS_H */
