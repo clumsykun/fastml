@@ -14,10 +14,7 @@ setup(
                                 'pyextension',
                                 sources = [
                                     'pyextension/src/pyextension_module.c',
-                                    'pyextension/src/utilities.c',
-                                    'pyextension/src/matrix.c',
-                                    'pyextension/src/data_structure.c',
-                                    'pyextension/src/mathtool.c',
+                                    'pyextension/src/utils.c',
                                 ],
                                 include_dirs = ['pyextension/include/'])
                             ]

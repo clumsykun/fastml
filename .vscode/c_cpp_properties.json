@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/**",
                 "/usr/local/anaconda3/include/python3.7m/**",
-                "/usr/local/anaconda3/lib/python3.7/site-packages/numpy/core/include/**"
+                "/usr/local/anaconda3/lib/python3.7/site-packages/numpy/core/include/**",
+                "/root/workspace/pyextension/pyextension/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
