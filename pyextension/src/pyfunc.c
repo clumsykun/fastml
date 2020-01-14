@@ -6,13 +6,18 @@ size_t CHN_SIZE = 3;  /* 一个中文需要 3 个 char 字符 */
 PyObject * string_mapping(const char *source, PyObject *dict)
 {
 
-    PyObject *words, *obj;
+    PyObject *words, *obj, *code_list;
     size_t i, size_add, size_source, max_size_word = 0;
     Py_ssize_t size_word, n_words;
+    char *tmp_char;
 
-    words = PyDict_Keys(dict);
-    n_words = PyList_Size(words);
+    words       = PyDict_Keys(dict);
+    n_words     = PyList_Size(words);
     size_source = strlen(source);
+    code_list   = PyList_New(0);
+
+    if (n_words == 0)  /* 可能不是列表 */
+        goto error;
 
     for (Py_ssize_t i = 0; i < n_words; i++) {
         obj = PyList_GetItem(words, i);
@@ -23,8 +28,9 @@ PyObject * string_mapping(const char *source, PyObject *dict)
             max_size_word = (size_t)size_word;
     }
 
-    char *tmp_char = malloc((size_t)max_size_word * CHN_SIZE);
-    PyObject *code_list = PyList_New(0);
+    tmp_char = malloc((size_t)max_size_word * CHN_SIZE);
+    if (tmp_char == NULL)
+        goto error;
 
     i = 0;
     while (i < size_source) {
@@ -69,5 +75,9 @@ PyObject * string_mapping(const char *source, PyObject *dict)
         }
     }
 
-    return code_list;
+error:
+    Py_XDECREF(words);
+    Py_XDECREF(obj);
+    Py_XDECREF(code_list);
+    return Py_None;
 }
