@@ -1,12 +1,19 @@
 
-#include "pyfunc.h"
 
-int test_string_findall()
+#include <Python.h>
+#include <assert.h>
+#include "utils.h"
+
+
+int test_utf8_is_pure_ascii()
 {
-    char *source = "上海abcaaabcaabcbca";
-    char *target = "上海";
+    char *string1 = "上海abcaaabcaabcbca";
+    char *string2 = "asdsada";
+    char *string3 = NULL;
 
-    PyObject *result = string_findall(source, target);
+    assert(utf8_is_pure_ascii(string1) == 0);
+    assert(utf8_is_pure_ascii(string2) == 1);
+    assert(utf8_is_pure_ascii(string3) == -1);
     return 0;
 }
 
@@ -14,7 +21,7 @@ int main(int argc, char *argv[])
 {
     Py_Initialize();
     PyRun_SimpleString("print('Hello Python!')\n");
-    test_string_findall();
+    test_utf8_is_pure_ascii();
     Py_Finalize();
     return 0;
 }
