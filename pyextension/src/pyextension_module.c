@@ -1,18 +1,13 @@
 // #define NPY_NO_DEPRECATED_API NPY_1_8_API_VERSION
 
-#include <Python.h>
-#include <numpy/arrayobject.h>
 #include <numpy/ndarraytypes.h>
-#include <numpy/ufuncobject.h>
-#include <numpy/halffloat.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
+#include <numpy/arrayobject.h>
+#include "pyfunc.h"
 #include "utils.h"
 
 
 /** ====================================================================================================
- * test
+ * function
  **/
 
 static PyObject *
@@ -100,6 +95,34 @@ fail:  /* 错误 */
     return NULL;
 }
 
+static PyObject *
+pyextension_utf8_is_pure_ascii(PyObject *self, PyObject *args)
+{
+    PyObject *obj;
+    if ( !PyArg_ParseTuple (args, "O!", &PyUnicode_Type, &obj) )
+        return NULL;
+
+    PyObject *re;
+
+    switch ( utf8_is_pure_ascii( PyUnicode_AsUTF8( PyUnicode_FromObject(obj) ) ) ) {
+
+        case 0:
+            re = Py_False;
+            break;
+        case 1:
+            re = Py_True;
+            break;
+        case -1:
+            re = Py_None;
+            break;
+        default:
+            re = Py_None;
+            break;
+    }
+
+    return re;
+}
+
 
 /** ====================================================================================================
  * Module Define
@@ -107,7 +130,8 @@ fail:  /* 错误 */
 
 static PyMethodDef
 pyextension_methods[] = {
-    {"test",                       pyextension_test,                           METH_VARARGS, "test(x, y, z)"},
+    {"test",               pyextension_test,               METH_VARARGS, "test func"},
+    {"utf8_is_pure_ascii", pyextension_utf8_is_pure_ascii, METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
     {NULL, NULL, 0, NULL},
 };
 
