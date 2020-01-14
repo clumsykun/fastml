@@ -11,6 +11,7 @@ int test_string_mapping(void)
     const char *source = "[日志] 我在上海居住了三年，我的编码是 123456。";
     PyObject *dict = PyDict_New();
 
+    PyDict_SetItemString( dict, "日志", PyLong_FromLong(0) );
     PyDict_SetItemString( dict, "上海", PyLong_FromLong(1) );
     PyDict_SetItemString( dict, "居住", PyLong_FromLong(2) );
     PyDict_SetItemString( dict, "三年", PyLong_FromLong(3) );
