@@ -11,7 +11,7 @@
 #include "utils.h"
 
 
-int utf8_is_pure_ascii(const char *source)
+int unicode_is_pure_ascii(const char *source)
 {
     if (source == NULL)
         return -1;

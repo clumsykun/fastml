@@ -96,7 +96,7 @@ fail:  /* 错误 */
 }
 
 static PyObject *
-pyextension_utf8_is_pure_ascii(PyObject *self, PyObject *args)
+pyextension_unicode_is_pure_ascii(PyObject *self, PyObject *args)
 {
     PyObject *obj;
     if ( !PyArg_ParseTuple (args, "O!", &PyUnicode_Type, &obj) )
@@ -104,7 +104,7 @@ pyextension_utf8_is_pure_ascii(PyObject *self, PyObject *args)
 
     PyObject *re;
 
-    switch ( utf8_is_pure_ascii( PyUnicode_AsUTF8( PyUnicode_FromObject(obj) ) ) ) {
+    switch ( unicode_is_pure_ascii( PyUnicode_AsUTF8( PyUnicode_FromObject(obj) ) ) ) {
 
         case 0:
             re = Py_False;
@@ -131,7 +131,7 @@ pyextension_utf8_is_pure_ascii(PyObject *self, PyObject *args)
 static PyMethodDef
 pyextension_methods[] = {
     {"test",               pyextension_test,               METH_VARARGS, "test func"},
-    {"utf8_is_pure_ascii", pyextension_utf8_is_pure_ascii, METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
+    {"unicode_is_pure_ascii", pyextension_unicode_is_pure_ascii, METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
     {NULL, NULL, 0, NULL},
 };
 

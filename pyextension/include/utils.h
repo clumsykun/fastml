@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-int utf8_is_pure_ascii(const char *source);
+int unicode_is_pure_ascii(const char *source);
 
 
 #endif	/* UTILS_H */
