@@ -131,7 +131,7 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 static PyMethodDef
 pyextension_methods[] = {
     {"test",               pyextension_test,               METH_VARARGS, "test func"},
-    {"str_is_pure_ascii", pyextension_str_is_pure_ascii, METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
+    {"str_is_pure_ascii",  pyextension_str_is_pure_ascii,  METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
     {NULL, NULL, 0, NULL},
 };
 
