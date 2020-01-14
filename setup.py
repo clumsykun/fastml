@@ -15,6 +15,7 @@ setup(
                                 sources = [
                                     'pyextension/src/pyextension_module.c',
                                     'pyextension/src/utils.c',
+                                    'pyextension/src/pyfunc.c'
                                 ],
                                 include_dirs = ['pyextension/include/'])
                             ]

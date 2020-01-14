@@ -1,5 +1,7 @@
 // #define NPY_NO_DEPRECATED_API NPY_1_8_API_VERSION
 
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
 #include <numpy/ndarraytypes.h>
 #include <numpy/arrayobject.h>
 #include "pyfunc.h"
@@ -123,6 +125,17 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
     return re;
 }
 
+static PyObject *
+pyextension_print_type_name(PyObject *self, PyObject *args)
+{
+    PyObject *obj;
+    if ( !PyArg_ParseTuple (args, "O", &obj) )
+        return NULL;
+
+    print_type_name(obj);
+    return Py_None;
+}
+
 
 /** ====================================================================================================
  * Module Define
@@ -132,6 +145,7 @@ static PyMethodDef
 pyextension_methods[] = {
     {"test",               pyextension_test,               METH_VARARGS, "test func"},
     {"str_is_pure_ascii",  pyextension_str_is_pure_ascii,  METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
+    {"print_type_name",    pyextension_print_type_name,    METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
     {NULL, NULL, 0, NULL},
 };
 
