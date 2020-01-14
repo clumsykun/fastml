@@ -1,3 +1,3 @@
-# Fast Machine Learning
+# Python Extension
 
-a package for fast machine learn.
+A python package, numpy used.
