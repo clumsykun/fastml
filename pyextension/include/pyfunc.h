@@ -6,7 +6,9 @@
 
 
 #define print_obj(obj) PyObject_Print( ( (PyObject *)obj ), stdout, Py_PRINT_RAW ); printf("\n");
-
 #define print_type_name(obj) printf("Python object type name: %s\n", ( (PyObject *)obj )->ob_type->tp_name);
+
+PyObject * string_mapping(const char *source, PyObject *dict);
+
 
 #endif	/* PYFUNC_H */
