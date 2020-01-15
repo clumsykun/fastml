@@ -1,6 +1,7 @@
 import pyextension
 import jieba
 from collections import namedtuple
+from time import time
 
 string_list = ['1123', '上海123', '  ', ',，']
 
@@ -16,14 +17,19 @@ pyextension.print_type_name(a)
 
 print('\n--------------------------------------------------\n')
 
-source = '我在上海居住了三年。'
+source = '我在上海居住了三年。123'
 my_dict = {
-    1: '上海',
-    2: '居住',
-    3: '三年',
-    4: '我',
-    5: '在',
+    '上海': 1,
+    '居住': 2,
+    '三年': 3,
+    '我': 4,
+    '在': 5,
 }
 
-result = jieba.cut(source)
-print(list(result))
+start = time()
+key_word = pyextension.str_extract_keyword(source, my_dict, True)
+spend = time() - start
+
+print(key_word)
+    
+print('time spend: ', spend)
