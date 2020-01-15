@@ -126,17 +126,6 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 }
 
 static PyObject *
-pyextension_print_type_name(PyObject *self, PyObject *args)
-{
-    PyObject *obj;
-    if ( !PyArg_ParseTuple(args, "O", &obj) )
-        return NULL;
-
-    print_type_name(obj);
-    return Py_None;
-}
-
-static PyObject *
 pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 {
     PyObject *source, *keywords, *use_code, *keyword_list;
@@ -161,7 +150,6 @@ static PyMethodDef
 pyextension_methods[] = {
     {"test",                pyextension_test,                METH_VARARGS, "test func"},
     {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "param: source[str]"},
-    {"print_type_name",     pyextension_print_type_name,     METH_VARARGS, "param: obj[python object]"},
     {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: source[str], keywords[dict], use_code[bool]"},
     {NULL, NULL, 0, NULL},
 };
