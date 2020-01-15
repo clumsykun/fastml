@@ -100,29 +100,29 @@ fail:  /* 错误 */
 static PyObject *
 pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 {
-    PyObject *obj;
-    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &obj) )
+    PyObject *source;
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &source) )
         return NULL;
 
-    PyObject *re;
+    PyObject *rv;
 
-    switch ( str_is_pure_ascii( PyUnicode_AsUTF8( PyUnicode_FromObject(obj) ) ) ) {
+    switch ( str_is_pure_ascii( PyUnicode_AsUTF8(source) ) ) {
 
         case 0:
-            re = Py_False;
+            rv = Py_False;
             break;
         case 1:
-            re = Py_True;
+            rv = Py_True;
             break;
         case -1:
-            re = Py_None;
+            rv = Py_None;
             break;
         default:
-            re = Py_None;
+            rv = Py_None;
             break;
     }
 
-    return re;
+    return rv;
 }
 
 static PyObject *
@@ -139,16 +139,18 @@ pyextension_print_type_name(PyObject *self, PyObject *args)
 static PyObject *
 pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 {
-    PyObject *str, *keywords, *use_code, *code_list;
+    PyObject *source, *keywords, *use_code, *keyword_list;
     if ( !PyArg_ParseTuple(args,
                            "O!O!O!",
-                           &PyUnicode_Type, &str,
+                           &PyUnicode_Type, &source,
                            &PyDict_Type, &keywords,
                            &PyBool_Type, &use_code) )
         return NULL;
 
-    code_list = str_extract_keyword( PyUnicode_AsUTF8(str), keywords, PyBool_AsCBool(use_code) );
-    return code_list;
+    keyword_list = str_extract_keyword( PyUnicode_AsUTF8(source),
+                                        keywords,
+                                        PyBool_AsCBool(use_code) );
+    return keyword_list;
 }
 
 /** ====================================================================================================
@@ -158,9 +160,9 @@ pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 static PyMethodDef
 pyextension_methods[] = {
     {"test",                pyextension_test,                METH_VARARGS, "test func"},
-    {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
-    {"print_type_name",     pyextension_print_type_name,     METH_VARARGS, "打印类名"},
-    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "parameter:\nsource[str], keywords[dict], use_code[bool]"},
+    {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "param: source[str]"},
+    {"print_type_name",     pyextension_print_type_name,     METH_VARARGS, "param: obj[python object]"},
+    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: source[str], keywords[dict], use_code[bool]"},
     {NULL, NULL, 0, NULL},
 };
 

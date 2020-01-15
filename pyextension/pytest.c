@@ -8,7 +8,7 @@
 
 int test_str_extract_keyword(void)
 {
-    const char *source = "[日志] 我在上海居住了三年，我的编码是 123456。";
+    const char *source = "abc[日志] 我在上海居住了三年，我的编码是 123456。";
     PyObject *dict = PyDict_New();
 
     PyDict_SetItemString( dict, "日志", PyLong_FromLong(0) );

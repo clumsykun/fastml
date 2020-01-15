@@ -17,7 +17,7 @@ pyextension.print_type_name(a)
 
 print('\n--------------------------------------------------\n')
 
-source = '我在上海居住了三年。123'
+source = '我在上海居住了三年。123abcAsadxaA;as'
 my_dict = {
     '上海': 1,
     '居住': 2,
@@ -29,7 +29,12 @@ my_dict = {
 start = time()
 key_word = pyextension.str_extract_keyword(source, my_dict, True)
 spend = time() - start
-
-print(key_word)
-    
+print(key_word)    
 print('time spend: ', spend)
+
+start = time()
+key_word = pyextension.str_extract_keyword(source, my_dict, False)
+spend = time() - start
+print(key_word)    
+print('time spend: ', spend)
+

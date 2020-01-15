@@ -26,6 +26,5 @@ int test_str_is_pure_ascii()
 
 int main(int argc, char const *argv[])
 {
-    bool a = true;
     return 0;
 }
