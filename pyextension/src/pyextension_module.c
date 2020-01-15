@@ -101,7 +101,7 @@ static PyObject *
 pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 {
     PyObject *obj;
-    if ( !PyArg_ParseTuple (args, "O!", &PyUnicode_Type, &obj) )
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &obj) )
         return NULL;
 
     PyObject *re;
@@ -129,13 +129,27 @@ static PyObject *
 pyextension_print_type_name(PyObject *self, PyObject *args)
 {
     PyObject *obj;
-    if ( !PyArg_ParseTuple (args, "O", &obj) )
+    if ( !PyArg_ParseTuple(args, "O", &obj) )
         return NULL;
 
     print_type_name(obj);
     return Py_None;
 }
 
+static PyObject *
+pyextension_str_extract_keyword(PyObject *self, PyObject *args)
+{
+    PyObject *str, *keywords, *use_code, *code_list;
+    if ( !PyArg_ParseTuple(args,
+                           "O!O!O!",
+                           &PyUnicode_Type, &str,
+                           &PyDict_Type, &keywords,
+                           &PyBool_Type, &use_code) )
+        return NULL;
+
+    code_list = str_extract_keyword( PyUnicode_AsUTF8(str), keywords, PyBool_AsCBool(use_code) );
+    return code_list;
+}
 
 /** ====================================================================================================
  * Module Define
@@ -143,9 +157,10 @@ pyextension_print_type_name(PyObject *self, PyObject *args)
 
 static PyMethodDef
 pyextension_methods[] = {
-    {"test",               pyextension_test,               METH_VARARGS, "test func"},
-    {"str_is_pure_ascii",  pyextension_str_is_pure_ascii,  METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
-    {"print_type_name",    pyextension_print_type_name,    METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
+    {"test",                pyextension_test,                METH_VARARGS, "test func"},
+    {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "判断一个 UTF-8 字符串是否由纯 ASCII 字符构成。"},
+    {"print_type_name",     pyextension_print_type_name,     METH_VARARGS, "打印类名"},
+    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "parameter:\nsource[str], keywords[dict], use_code[bool]"},
     {NULL, NULL, 0, NULL},
 };
 

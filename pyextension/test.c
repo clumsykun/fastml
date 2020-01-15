@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 #include "utils.h"
 
 
@@ -25,5 +26,6 @@ int test_str_is_pure_ascii()
 
 int main(int argc, char const *argv[])
 {
+    bool a = true;
     return 0;
 }

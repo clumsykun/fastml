@@ -3,18 +3,17 @@
 size_t CHN_SIZE = 3;  /* 一个中文需要 3 个 char 字符 */
 
 
-PyObject * string_mapping(const char *source, PyObject *dict)
+PyObject * str_extract_keyword(const char *source, PyObject *keywords, bool use_code)
 {
-
-    PyObject *words, *obj, *code_list;
-    size_t i, size_add, size_source, max_size_word = 0;
-    Py_ssize_t size_word, n_words;
+    PyObject *words, *obj, *keyword_list;
+    size_t i, size_word, size_add, size_source, max_size_word = 0;
+    Py_ssize_t n_words;
     char *tmp_char;
 
-    words       = PyDict_Keys(dict);
-    n_words     = PyList_Size(words);
-    size_source = strlen(source);
-    code_list   = PyList_New(0);
+    words        = PyDict_Keys(keywords);
+    n_words      = PyList_Size(words);
+    size_source  = strlen(source);
+    keyword_list = PyList_New(0);
 
     if (n_words == 0)  /* 可能不是列表 */
         goto error;
@@ -23,7 +22,7 @@ PyObject * string_mapping(const char *source, PyObject *dict)
         obj = PyList_GetItem(words, i);
         if ( !PyUnicode_Check(obj) ) continue;
 
-        size_word = PyUnicode_GetLength(obj);
+        size_word = (size_t)PyUnicode_GetLength(obj);
         if (size_word > max_size_word)
             max_size_word = (size_t)size_word;
     }
@@ -49,7 +48,7 @@ PyObject * string_mapping(const char *source, PyObject *dict)
                     break;
 
                 memcpy(tmp_char, &source[i], size_add);
-                obj = PyDict_GetItemString(dict, tmp_char);
+                obj = PyDict_GetItemString(keywords, tmp_char);
 
                 if (obj == NULL) continue;
                 else break;  /* 查到值 */
@@ -57,17 +56,20 @@ PyObject * string_mapping(const char *source, PyObject *dict)
 
             if (obj == NULL)  /* 无效字符的情况 */
                 i += CHN_SIZE;
+
             else {  /* 有效字符的情况 */
-                PyList_Append(code_list, PyUnicode_FromString(tmp_char));
+                if (use_code)
+                    PyList_Append(keyword_list, obj);
+                else
+                    PyList_Append(keyword_list, PyUnicode_FromString(tmp_char));
+
                 i += size_add;
             }
         }
 
-        else {
-
-            /* 不是中文时，只截取数字 */
+        else {  /* 不是中文时，只截取数字，数字格式为 double */
             if (48 <= source[i] && source[i] <= 57) {
-                PyList_Append( code_list, PyLong_FromLong( (long)atoi(&source[i]) ) );
+                PyList_Append( keyword_list, PyFloat_FromDouble( (double)atoi(&source[i]) ) );
                 while ( 48 <= source[i] && source[i] <= 57 ) i++;
             }
 
@@ -75,9 +77,11 @@ PyObject * string_mapping(const char *source, PyObject *dict)
         }
     }
 
+    return keyword_list;
+
 error:
     Py_XDECREF(words);
     Py_XDECREF(obj);
-    Py_XDECREF(code_list);
+    Py_XDECREF(keyword_list);
     return Py_None;
 }
