@@ -9,7 +9,7 @@
 #define print_obj(obj) PyObject_Print( ( (PyObject *)obj ), stdout, Py_PRINT_RAW ); printf("\n")
 #define print_type_name(obj) printf("Python object type name: %s\n", ( (PyObject *)obj )->ob_type->tp_name)
 
-PyObject * str_extract_keyword(const char *source, PyObject *keywords, bool use_code);
+PyObject * str_extract_keyword(PyObject *str, PyObject *keywords, bool use_code);
 
 
 #endif	/* PYFUNC_H */

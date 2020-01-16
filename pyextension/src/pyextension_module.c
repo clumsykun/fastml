@@ -128,15 +128,15 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 static PyObject *
 pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 {
-    PyObject *source, *keywords, *use_code, *keyword_list;
+    PyObject *str, *keywords, *use_code, *keyword_list;
     if ( !PyArg_ParseTuple(args,
                            "O!O!O!",
-                           &PyUnicode_Type, &source,
+                           &PyUnicode_Type, &str,
                            &PyDict_Type, &keywords,
                            &PyBool_Type, &use_code) )
         return NULL;
 
-    keyword_list = str_extract_keyword( PyUnicode_AsUTF8(source),
+    keyword_list = str_extract_keyword( str,
                                         keywords,
                                         PyBool_AsCBool(use_code) );
     return keyword_list;
@@ -158,7 +158,7 @@ pyextension_methods[] = {
 static PyModuleDef
 pyextension_module = { 
     PyModuleDef_HEAD_INIT,
-    "_fastmlcore",
+    "pyextension",
     NULL,
     -1,
     pyextension_methods,

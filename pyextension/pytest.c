@@ -6,9 +6,24 @@
 #include "pyfunc.h"
 
 
+int test_basic()
+{
+    PyObject *str = PyUnicode_FromString("这是一个字符串string123。");
+    Py_ssize_t size_source;
+    wchar_t *source = PyUnicode_AsWideCharString(str, &size_source);
+
+    source[0] = source[1];
+
+    print_obj(str);
+
+    PyObject *dict = PyDict_New();
+
+    return 0;
+}
+
 int test_str_extract_keyword(void)
 {
-    const char *source = "abc[日志] 我在上海居住了三年，我的编码是 123456。";
+    PyObject *str = PyUnicode_FromString("abc[日志] 我在上海居住了三年，我的编码是 123456。");
     PyObject *dict = PyDict_New();
 
     PyDict_SetItemString( dict, "日志", PyLong_FromLong(0) );
@@ -18,8 +33,12 @@ int test_str_extract_keyword(void)
     PyDict_SetItemString( dict, "我", PyLong_FromLong(4) );
     PyDict_SetItemString( dict, "在", PyLong_FromLong(5) );
 
-    PyObject *result = str_extract_keyword(source, dict, false);
+    PyObject *result;
+    result = str_extract_keyword(str, dict, false);
     print_obj(result);
+    result = str_extract_keyword(str, dict, true);
+    print_obj(result);
+
     return 0;
 }
 
@@ -27,11 +46,8 @@ int test_str_extract_keyword(void)
 int main(int argc, char *argv[])
 {
     Py_Initialize();
-    // PyRun_SimpleString("print(Python Initialized! \n");
+    // test_basic();
     test_str_extract_keyword();
-
-    bool a = (bool)PyBool_FromLong(0);
-    bool b = (bool)PyBool_FromLong(1);
 
     Py_Finalize();
     return 0;
