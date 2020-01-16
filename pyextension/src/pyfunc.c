@@ -30,8 +30,6 @@ PyObject *str_extract_keyword(PyObject *unicode, PyObject *keywords, bool use_co
             max_size_word = size_word;
     }
 
-
-
     i = 0;
     while (i < size_source) {
 
