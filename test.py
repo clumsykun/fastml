@@ -11,7 +11,7 @@ for string in string_list:
 
 print('\n--------------------------------------------------\n')
 
-source = '我在上海居住了三年。123abcAsadxaA;as'
+unicode = '我在上海居住了三年。123abcAsadxaA;as'
 my_dict = {
     '上海': 1,
     '居住': 2,
@@ -21,14 +21,29 @@ my_dict = {
 }
 
 start = time()
-key_word = pyextension.str_extract_keyword(source, my_dict, True)
+key_word = pyextension.str_extract_keyword(unicode, my_dict, True)
 spend = time() - start
 print(key_word)    
 print('time spend: ', spend)
 
 start = time()
-key_word = pyextension.str_extract_keyword(source, my_dict, False)
+key_word = pyextension.str_extract_keyword(unicode, my_dict, False)
 spend = time() - start
 print(key_word)    
 print('time spend: ', spend)
 
+print('\n--------------------------------------------------\n')
+
+unicode = ''.join(['这是一行测试文本。This is test text!'] * 10000000)
+
+start = time()
+rv = pyextension.str_reverse(unicode)
+spend = time() - start
+
+print('pyextension: ', spend)
+
+start = time()
+rv = unicode[::-1]
+spend = time() - start
+
+print('original: ', spend)

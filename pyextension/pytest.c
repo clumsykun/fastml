@@ -8,15 +8,12 @@
 
 int test_basic()
 {
-    PyObject *str = PyUnicode_FromString("这是一个字符串string123。");
-    Py_ssize_t size_source;
-    wchar_t *source = PyUnicode_AsWideCharString(str, &size_source);
+    PyObject *str1 = PyUnicode_FromString("字符串1");
+    PyObject *str2 = PyUnicode_FromString("字符串2");
 
-    source[0] = source[1];
-
-    print_obj(str);
-
-    PyObject *dict = PyDict_New();
+    str1 = str2;
+    print_obj(str1);
+    print_obj(str2);
 
     return 0;
 }
@@ -42,12 +39,22 @@ int test_str_extract_keyword(void)
     return 0;
 }
 
+int test_str_reverse(void)
+{
+    PyObject *str = PyUnicode_FromString("阿森纳是冠军!arsenal is champion!");
+    PyObject *str_rev = str_reverse(str);
+
+    print_obj(str);
+    print_obj(str_rev);
+    return 0;
+}
 
 int main(int argc, char *argv[])
 {
     Py_Initialize();
     // test_basic();
-    test_str_extract_keyword();
+    // test_str_extract_keyword();
+    test_str_reverse();
 
     Py_Finalize();
     return 0;

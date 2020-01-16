@@ -3,15 +3,13 @@
 size_t CHN_SIZE = 3;  /* 一个中文需要 3 个 char 字符 */
 
 
-PyObject * str_extract_keyword(PyObject *str, PyObject *keywords, bool use_code)
+PyObject *str_extract_keyword(PyObject *unicode, PyObject *keywords, bool use_code)
 {
     PyObject *words, *obj, *keyword_list;
-    Py_ssize_t i, size_word, size_add, max_size_word = 0;
+    Py_ssize_t i, size_word, size_add, n_words, size_source, max_size_word;
     wchar_t *source;
-    Py_ssize_t n_words, size_source;
 
-
-    source       = PyUnicode_AsWideCharString(str, &size_source);
+    source       = PyUnicode_AsWideCharString(unicode, &size_source);
     words        = PyDict_Keys(keywords);
     n_words      = PyList_Size(words);
     keyword_list = PyList_New(0);
@@ -22,6 +20,7 @@ PyObject * str_extract_keyword(PyObject *str, PyObject *keywords, bool use_code)
     if (keyword_list == NULL)  /* 内存错误 */
         goto error;
 
+    max_size_word = 0;
     for (i = 0; i < n_words; i++) {
         obj = PyList_GetItem(words, i);
         if ( !PyUnicode_Check(obj) ) continue;
@@ -62,7 +61,6 @@ PyObject * str_extract_keyword(PyObject *str, PyObject *keywords, bool use_code)
 
             i += size_add;
         }
-
     }
 
     return keyword_list;
@@ -72,4 +70,22 @@ error:
     Py_XDECREF(obj);
     Py_XDECREF(keyword_list);
     return Py_None;
+}
+
+PyObject *str_reverse(PyObject *unicode)
+{
+    wchar_t *source, tmp;
+    Py_ssize_t size_source, idx_max, idx_stop;
+
+    source = PyUnicode_AsWideCharString(unicode, &size_source);
+    idx_max = size_source - 1;
+    idx_stop = (Py_ssize_t)ceil( (double)size_source / 2 );
+
+    for (Py_ssize_t i = 0; i < idx_stop; i++) {
+        tmp = source[i];
+        source[i] = source[idx_max-i];
+        source[idx_max-i] = tmp;
+    }
+
+    return PyUnicode_FromWideChar(source, size_source);
 }

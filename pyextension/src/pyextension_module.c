@@ -128,18 +128,27 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 static PyObject *
 pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 {
-    PyObject *str, *keywords, *use_code, *keyword_list;
+    PyObject *unicode, *keywords, *use_code;
     if ( !PyArg_ParseTuple(args,
                            "O!O!O!",
-                           &PyUnicode_Type, &str,
+                           &PyUnicode_Type, &unicode,
                            &PyDict_Type, &keywords,
                            &PyBool_Type, &use_code) )
         return NULL;
 
-    keyword_list = str_extract_keyword( str,
-                                        keywords,
-                                        PyBool_AsCBool(use_code) );
-    return keyword_list;
+    return str_extract_keyword( unicode,
+                                keywords,
+                                PyBool_AsCBool(use_code) );
+}
+
+static PyObject *
+pyextension_str_reverse(PyObject *self, PyObject *args)
+{
+    PyObject *unicode;
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &unicode) )
+        return NULL;
+
+    return str_reverse(unicode);
 }
 
 /** ====================================================================================================
@@ -150,7 +159,8 @@ static PyMethodDef
 pyextension_methods[] = {
     {"test",                pyextension_test,                METH_VARARGS, "test func"},
     {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "param: source[str]"},
-    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: source[str], keywords[dict], use_code[bool]"},
+    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: unicode[str], keywords[dict], use_code[bool]"},
+    {"str_reverse",         pyextension_str_reverse,         METH_VARARGS, "param: unicode[str]"},
     {NULL, NULL, 0, NULL},
 };
 
