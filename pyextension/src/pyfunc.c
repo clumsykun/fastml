@@ -34,7 +34,8 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
     max_len_keywords = 0;  /* 字典中词语的最大长度 */
     for (i = 0; i < n_keywords; i++) {
         _obj = PyList_GetItem(keywords, i);
-        if ( !PyUnicode_Check(_obj) ) continue;
+        if ( !PyUnicode_Check(_obj) )
+            continue;
 
         _size = PyUnicode_GetLength(_obj);
         if (_size > max_len_keywords)
