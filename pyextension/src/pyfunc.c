@@ -5,11 +5,11 @@ size_t CHN_SIZE = 3;  /* 一个中文需要 3 个 char 字符 */
 /* 使用`向前`、`向后`两种方法来提取关键字，返回字数更多的方法结果
  * 如果两种结果的字数一致，则返回权重高的方法结果
  */
-PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
+PyObject *str_extract_keyword(PyObject *str_source, PyObject *dict_keywords)
 {
     PyObject *keywords, *forward, *backward, *rv, *_obj;
-    wchar_t *unicode;
-    Py_ssize_t size_unicode, max_len_keywords, n_keywords, n_forward, n_backward;
+    wchar_t *source;
+    Py_ssize_t size_source, max_len_keywords, n_keywords, n_forward, n_backward;
     Py_ssize_t i, _size, _move;
     double w_forward, w_backward;
 
@@ -18,7 +18,7 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
     backward     = PyList_New(0);
     rv           = NULL;
     _obj         = NULL;
-    unicode      = PyUnicode_AsWideCharString(obj_unicode, &size_unicode);
+    source      = PyUnicode_AsWideCharString(str_source, &size_source);
     n_keywords   = PyList_Size(keywords);
     n_forward    = 0;  /* `向前`方法获取关键字字数（不是词数） */
     n_backward   = 0;  /* `向后`方法获取关键字字数（不是词数） */
@@ -44,18 +44,18 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
 
     /* 使用`向前`方法获取关键字 */
     i = 0;
-    while (i < size_unicode) {
+    while (i < size_source) {
 
         /* 初始化数据 */
         _move = 0;  /* 向后位移数 */
         _obj  = NULL;
 
         while (++_move <= max_len_keywords) {
-            if (i + _move > size_unicode)  /* 防止内存越界 */
+            if (i + _move > size_source)  /* 防止内存越界 */
                 break;
 
             _obj = PyDict_GetItem( dict_keywords,
-                                   PyUnicode_FromWideChar(&unicode[i],
+                                   PyUnicode_FromWideChar(&source[i],
                                                           _move) );
             if (_obj == NULL) continue;
             else break;  /* 查到值 */
@@ -66,7 +66,7 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
 
         else {  /* 有效字符的情况 */
             PyList_Append( forward,
-                           PyUnicode_FromWideChar(&unicode[i],
+                           PyUnicode_FromWideChar(&source[i],
                                                   _move) );
             w_forward += PyFloat_AsDouble(_obj);
             n_forward += _move;
@@ -75,7 +75,7 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
     }
 
     /* 使用`向后`方法获取关键字 */
-    i = size_unicode;
+    i = size_source;
     while (i >= 0 ) {
 
         /* 初始化数据 */
@@ -87,7 +87,7 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
                 break;
 
             _obj = PyDict_GetItem( dict_keywords,
-                                   PyUnicode_FromWideChar(&unicode[i - _move],
+                                   PyUnicode_FromWideChar(&source[i - _move],
                                                           _move) );
             if (_obj == NULL) continue;
             else break;  /* 查到值 */
@@ -99,7 +99,7 @@ PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords)
         else {
             PyList_Insert( backward,
                            0,
-                           PyUnicode_FromWideChar(&unicode[i - _move],
+                           PyUnicode_FromWideChar(&source[i - _move],
                                                   _move) );
 
             w_backward += PyFloat_AsDouble(_obj);
@@ -131,7 +131,7 @@ error:
     return Py_None;
 }
 
-PyObject *str_cal_tfidf(PyObject *obj_unicode, PyObject *dict_keywords)
+PyObject *str_cal_tfidf(PyObject *str_source, PyObject *dict_keywords)
 {
     PyObject *rv;
 
@@ -139,20 +139,20 @@ PyObject *str_cal_tfidf(PyObject *obj_unicode, PyObject *dict_keywords)
     return rv;
 }
 
-PyObject *str_reverse(PyObject *obj_unicode)
+PyObject *str_reverse(PyObject *str_source)
 {
-    wchar_t *unicode, tmp;
-    Py_ssize_t size_unicode, idx_max, idx_stop;
+    wchar_t *source, tmp;
+    Py_ssize_t size_source, idx_max, idx_stop;
 
-    unicode  = PyUnicode_AsWideCharString(obj_unicode, &size_unicode);
-    idx_max  = size_unicode - 1;
-    idx_stop = (Py_ssize_t)ceil( (double)size_unicode / 2 );
+    source  = PyUnicode_AsWideCharString(str_source, &size_source);
+    idx_max  = size_source - 1;
+    idx_stop = (Py_ssize_t)ceil( (double)size_source / 2 );
 
     for (Py_ssize_t i = 0; i < idx_stop; i++) {
-        tmp = unicode[i];
-        unicode[i] = unicode[idx_max-i];
-        unicode[idx_max-i] = tmp;
+        tmp = source[i];
+        source[i] = source[idx_max-i];
+        source[idx_max-i] = tmp;
     }
 
-    return PyUnicode_FromWideChar(unicode, size_unicode);
+    return PyUnicode_FromWideChar(source, size_source);
 }

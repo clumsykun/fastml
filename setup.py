@@ -5,7 +5,7 @@ from numpy.distutils.misc_util import get_numpy_include_dirs
 
 setup(
         name            = 'pyextension',
-        version         = '0.3',
+        version         = '0.5',
         packages        = find_packages(),
         description     = 'My Python Extension Module',
         include_dirs    = get_numpy_include_dirs(),

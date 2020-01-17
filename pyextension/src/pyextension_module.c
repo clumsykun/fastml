@@ -100,11 +100,11 @@ fail:  /* 错误 */
 static PyObject *
 pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 {
-    PyObject *obj_unicode;
-    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &obj_unicode) )
+    PyObject *str_source;
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &str_source) )
         return NULL;
 
-    switch ( str_is_pure_ascii( PyUnicode_AsUTF8(obj_unicode) ) ) {
+    switch ( str_is_pure_ascii( PyUnicode_AsUTF8(str_source) ) ) {
 
         case 0:
             return Py_False;
@@ -121,37 +121,37 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 static PyObject *
 pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 {
-    PyObject *obj_unicode, *dict_keywords;
+    PyObject *str_source, *dict_keywords;
     if ( !PyArg_ParseTuple(args,
                            "O!O!",
-                           &PyUnicode_Type, &obj_unicode,
+                           &PyUnicode_Type, &str_source,
                            &PyDict_Type, &dict_keywords) )
         return NULL;
 
-    return str_extract_keyword(obj_unicode, dict_keywords);
+    return str_extract_keyword(str_source, dict_keywords);
 }
 
 static PyObject *
 pyextension_str_cal_tfidf(PyObject *self, PyObject *args)
 {
-    PyObject *obj_unicode, *obj_keywords;
+    PyObject *str_source, *obj_keywords;
     if ( !PyArg_ParseTuple(args,
                            "O!O!",
-                           &PyUnicode_Type, &obj_unicode,
+                           &PyUnicode_Type, &str_source,
                            &PyDict_Type, &obj_keywords) )
         return NULL;
 
-    return str_cal_tfidf(obj_unicode, obj_keywords);
+    return str_cal_tfidf(str_source, obj_keywords);
 }
 
 static PyObject *
 pyextension_str_reverse(PyObject *self, PyObject *args)
 {
-    PyObject *obj_unicode;
-    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &obj_unicode) )
+    PyObject *str_source;
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &str_source) )
         return NULL;
 
-    return str_reverse(obj_unicode);
+    return str_reverse(str_source);
 }
 
 /** ====================================================================================================
@@ -161,10 +161,10 @@ pyextension_str_reverse(PyObject *self, PyObject *args)
 static PyMethodDef
 pyextension_methods[] = {
     {"test",                pyextension_test,                METH_VARARGS, "test func"},
-    {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "param: obj_unicode[str]"},
-    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: obj_unicode[str], dict_keywords[dict]"},
-    {"str_cal_tfidf",       pyextension_str_cal_tfidf,       METH_VARARGS, "param: obj_unicode[str], dict_keywords[dict]"},
-    {"str_reverse",         pyextension_str_reverse,         METH_VARARGS, "param: obj_unicode[str]"},
+    {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "param: str_source"},
+    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: str_source, dict_keywords"},
+    {"str_cal_tfidf",       pyextension_str_cal_tfidf,       METH_VARARGS, "param: str_source, dict_keywords"},
+    {"str_reverse",         pyextension_str_reverse,         METH_VARARGS, "param: str_source"},
     {NULL, NULL, 0, NULL},
 };
 
