@@ -10,6 +10,7 @@
 #define print_type_name(obj) printf("Python object type name: %s\n", ( (PyObject *)obj )->ob_type->tp_name)
 
 PyObject *str_extract_keyword(PyObject *obj_unicode, PyObject *dict_keywords);
+PyObject *str_cal_tfidf(PyObject *obj_unicode, PyObject *dict_keywords);
 PyObject *str_reverse(PyObject *obj_unicode);
 
 #endif	/* PYFUNC_H */

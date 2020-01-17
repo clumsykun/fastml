@@ -29,6 +29,11 @@ print('time spend: ', spend)
 
 print('\n--------------------------------------------------\n')
 
+word_tfidf = pyextension.str_cal_tfidf(unicode, my_dict)
+print(word_tfidf)
+
+print('\n--------------------------------------------------\n')
+
 unicode = ''.join(['这是一行测试文本。This is test text!'] * 10000000)
 
 start = time()

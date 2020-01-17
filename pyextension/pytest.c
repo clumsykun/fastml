@@ -18,7 +18,7 @@ int test_basic()
     return 0;
 }
 
-int test_str_extract_keyword(void)
+int test_str_extract_keyword()
 {
     PyObject *str = PyUnicode_FromString("日志 我在上海市居住了三年，我的编码是 123456。");
     PyObject *dict = PyDict_New();
@@ -38,7 +38,12 @@ int test_str_extract_keyword(void)
     return 0;
 }
 
-int test_str_reverse(void)
+int test_str_cal_tfidf()
+{
+    return 0;
+}
+
+int test_str_reverse()
 {
     PyObject *str = PyUnicode_FromString("阿森纳是冠军!arsenal is champion!");
     PyObject *str_rev = str_reverse(str);
@@ -51,9 +56,12 @@ int test_str_reverse(void)
 int main(int argc, char *argv[])
 {
     Py_Initialize();
+
+    /* test func */
     // test_basic();
-    test_str_extract_keyword();
-    test_str_reverse();
+    // test_str_extract_keyword();
+    test_str_cal_tfidf();
+    // test_str_reverse();
 
     Py_Finalize();
     return 0;

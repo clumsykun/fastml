@@ -131,6 +131,14 @@ error:
     return Py_None;
 }
 
+PyObject *str_cal_tfidf(PyObject *obj_unicode, PyObject *dict_keywords)
+{
+    PyObject *rv;
+
+    rv = Py_None;
+    return rv;
+}
+
 PyObject *str_reverse(PyObject *obj_unicode)
 {
     wchar_t *unicode, tmp;
