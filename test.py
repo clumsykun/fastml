@@ -14,6 +14,7 @@ print('\n--------------------------------------------------\n')
 unicode = '我在上海居住了三年。123abcAsadxaA;as'
 my_dict = {
     '上海': 1,
+    '上海市': 2,
     '居住': 2,
     '三年': 3,
     '我': 4,
@@ -21,15 +22,9 @@ my_dict = {
 }
 
 start = time()
-key_word = pyextension.str_extract_keyword(unicode, my_dict, True)
+key_word = pyextension.str_extract_keyword(unicode, my_dict)
 spend = time() - start
-print(key_word)    
-print('time spend: ', spend)
-
-start = time()
-key_word = pyextension.str_extract_keyword(unicode, my_dict, False)
-spend = time() - start
-print(key_word)    
+print(key_word)
 print('time spend: ', spend)
 
 print('\n--------------------------------------------------\n')
