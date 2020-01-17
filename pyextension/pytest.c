@@ -20,20 +20,19 @@ int test_basic()
 
 int test_str_extract_keyword(void)
 {
-    PyObject *str = PyUnicode_FromString("abc[日志] 我在上海居住了三年，我的编码是 123456。");
+    PyObject *str = PyUnicode_FromString("日志 我在上海市居住了三年，我的编码是 123456。");
     PyObject *dict = PyDict_New();
 
     PyDict_SetItemString( dict, "日志", PyLong_FromLong(0) );
     PyDict_SetItemString( dict, "上海", PyLong_FromLong(1) );
+    PyDict_SetItemString( dict, "上海市", PyLong_FromLong(2) );
     PyDict_SetItemString( dict, "居住", PyLong_FromLong(2) );
     PyDict_SetItemString( dict, "三年", PyLong_FromLong(3) );
     PyDict_SetItemString( dict, "我", PyLong_FromLong(4) );
     PyDict_SetItemString( dict, "在", PyLong_FromLong(5) );
 
     PyObject *result;
-    result = str_extract_keyword(str, dict, false);
-    print_obj(result);
-    result = str_extract_keyword(str, dict, true);
+    result = str_extract_keyword(str, dict);
     print_obj(result);
 
     return 0;
@@ -53,7 +52,7 @@ int main(int argc, char *argv[])
 {
     Py_Initialize();
     // test_basic();
-    // test_str_extract_keyword();
+    test_str_extract_keyword();
     test_str_reverse();
 
     Py_Finalize();

@@ -128,17 +128,14 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 static PyObject *
 pyextension_str_extract_keyword(PyObject *self, PyObject *args)
 {
-    PyObject *unicode, *keywords, *use_code;
+    PyObject *unicode, *keywords;
     if ( !PyArg_ParseTuple(args,
-                           "O!O!O!",
+                           "O!O!",
                            &PyUnicode_Type, &unicode,
-                           &PyDict_Type, &keywords,
-                           &PyBool_Type, &use_code) )
+                           &PyDict_Type, &keywords) )
         return NULL;
 
-    return str_extract_keyword( unicode,
-                                keywords,
-                                PyBool_AsCBool(use_code) );
+    return str_extract_keyword(unicode, keywords);
 }
 
 static PyObject *
