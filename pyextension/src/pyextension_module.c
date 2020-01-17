@@ -111,15 +111,14 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
         case 0:
             rv = Py_False;
             break;
+
         case 1:
             rv = Py_True;
             break;
-        case -1:
-            rv = Py_None;
-            break;
+
         default:
-            rv = Py_None;
-            break;
+            PyErr_SetString(PyExc_ValueError, "字符串内容错误！");
+            return NULL;
     }
 
     return rv;
