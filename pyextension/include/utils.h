@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-int str_is_pure_ascii(const char *source);
+int str_is_pure_ascii(const char *text);
 
 
 #endif	/* UTILS_H */

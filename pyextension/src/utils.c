@@ -11,13 +11,13 @@
 #include "utils.h"
 
 
-int str_is_pure_ascii(const char *source)
+int str_is_pure_ascii(const char *text)
 {
-    if (source == NULL)
+    if (text == NULL)
         return -1;
 
-    for (size_t i = 0; source[i] != '\0'; i++)
-        if ( (int)source[i] < 0 )
+    for (size_t i = 0; text[i] != '\0'; i++)
+        if ( (int)text[i] < 0 )
             return 0;
 
     return 1;

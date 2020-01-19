@@ -8,19 +8,26 @@
 
 int test_basic()
 {
-    PyObject *str1 = PyUnicode_FromString("字符串1");
-    PyObject *str2 = PyUnicode_FromString("字符串2");
+    PyObject *o, *j, *list = PyList_New(0);
+    PyList_Append( list, PyLong_FromLong(0) );
+    PyList_Append( list, PyLong_FromLong(0) );
+    PyList_Append( list, PyLong_FromLong(0) );
+    PyList_Append( list, PyLong_FromLong(0) );
 
-    str1 = str2;
-    print_obj(str1);
-    print_obj(str2);
+    for (Py_ssize_t i = 0; i < 4; i++) {
+        j = PyNumber_InPlaceAdd( PyList_GetItem(list, i), PyLong_FromLong(1) );
+        print_obj(o);
+        print_obj(j);
+    }
 
+    print_obj(list);
     return 0;
 }
 
-int test_str_extract_keyword()
+int test_str_cal_tfidf()
 {
-    PyObject *str_source = PyUnicode_FromString("日志 我在上海市居住了三年，我的编码是 123456。");
+    PyObject *str_text1 = PyUnicode_FromString("日志 我在上海市居住了三年，我的编码是 123456。");
+    PyObject *str_text2 = PyUnicode_FromString("我的编码是 123456。");
     PyObject *dict_keywords = PyDict_New();
 
     PyDict_SetItemString( dict_keywords, "日志", PyLong_FromLong(0) );
@@ -31,15 +38,14 @@ int test_str_extract_keyword()
     PyDict_SetItemString( dict_keywords, "我", PyLong_FromLong(4) );
     PyDict_SetItemString( dict_keywords, "在", PyLong_FromLong(5) );
 
+    PyObject *list_corpus = PyList_New(0);
+
+    PyList_Append(list_corpus, str_text1);
+    PyList_Append(list_corpus, str_text2);
+
     PyObject *result;
-    result = str_extract_keyword(str_source, dict_keywords);
+    result = str_cal_tfidf(list_corpus, dict_keywords);
     print_obj(result);
-
-    return 0;
-}
-
-int test_str_cal_tfidf()
-{
     return 0;
 }
 
