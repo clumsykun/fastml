@@ -1,30 +1,29 @@
 #include "pyfunc.h"
 
-size_t CHN_SIZE = 3;  /* 一个中文需要 3 个 char 字符 */
 
 /* 使用`向前`、`向后`两种方法来提取关键字，返回字数更多的方法结果
  * 如果两种结果的字数一致，则返回权重高的方法结果
  * 
  * param:
- *     str_text[str]: 待处理文本
- *     dict_keywords[dict]: 词典
+ *     s_text[str]: 待处理文本
+ *     d_keywords[dict]: 词典
  * return:
  *     rv[list]: keywords list
  */
-PyObject *str_extract_keyword(PyObject *str_text, PyObject *dict_keywords)
+PyObject *s_extract_keyword(PyObject *s_text, PyObject *d_keywords)
 {
     PyObject *keywords, *forward, *backward, *rv, *_obj;
     wchar_t *text;
-    Py_ssize_t size_text, max_len_keywords, n_keywords, n_forward, n_backward;
+    Py_ssize_t n_text, max_len_keywords, n_keywords, n_forward, n_backward;
     Py_ssize_t i, _size, _move;
     double w_forward, w_backward;
 
-    keywords     = PyDict_Keys(dict_keywords);
+    keywords     = PyDict_Keys(d_keywords);
     forward      = PyList_New(0);
     backward     = PyList_New(0);
     rv           = NULL;
     _obj         = NULL;
-    text      = PyUnicode_AsWideCharString(str_text, &size_text);
+    text      = PyUnicode_AsWideCharString(s_text, &n_text);
     n_keywords   = PyList_Size(keywords);
     n_forward    = 0;  /* `向前`方法获取关键字字数（不是词数） */
     n_backward   = 0;  /* `向后`方法获取关键字字数（不是词数） */
@@ -50,17 +49,17 @@ PyObject *str_extract_keyword(PyObject *str_text, PyObject *dict_keywords)
 
     /* 使用`向前`方法获取关键字 */
     i = 0;
-    while (i < size_text) {
+    while (i < n_text) {
 
         /* 初始化数据 */
         _move = 0;  /* 向后位移数 */
         _obj  = NULL;
 
         while (++_move <= max_len_keywords) {
-            if (i + _move > size_text)  /* 防止内存越界 */
+            if (i + _move > n_text)  /* 防止内存越界 */
                 break;
 
-            _obj = PyDict_GetItem( dict_keywords,
+            _obj = PyDict_GetItem( d_keywords,
                                    PyUnicode_FromWideChar(&text[i],
                                                           _move) );
             if (_obj == NULL) continue;
@@ -81,7 +80,7 @@ PyObject *str_extract_keyword(PyObject *str_text, PyObject *dict_keywords)
     }
 
     /* 使用`向后`方法获取关键字 */
-    i = size_text;
+    i = n_text;
     while (i >= 0 ) {
 
         /* 初始化数据 */
@@ -92,7 +91,7 @@ PyObject *str_extract_keyword(PyObject *str_text, PyObject *dict_keywords)
             if (i - _move < 0)  /* 防止内存越界 */
                 break;
 
-            _obj = PyDict_GetItem( dict_keywords,
+            _obj = PyDict_GetItem( d_keywords,
                                    PyUnicode_FromWideChar(&text[i - _move],
                                                           _move) );
             if (_obj == NULL) continue;
@@ -137,60 +136,62 @@ error:
     return Py_None;
 }
 
-PyObject *str_cal_tfidf(PyObject *list_corpus, PyObject *dict_keywords)
+PyObject *s_cal_tfidf(PyObject *l_corpus, PyObject *d_keywords)
 {
-    PyObject *rv, *list_keywords_texts, *dict_keywords_cnt;
+    PyObject *rv, *l_keywords_texts;
+    PyObject *d_keywords_cnt, *d_keywords_test_cnt, *d_keywords_text_cnt;
     PyObject *o1, *o2, *o3, *o4;
-    Py_ssize_t size_corpus;
+    Py_ssize_t n_corpus;
 
-    list_keywords_texts = PyList_New(0);
-    dict_keywords_cnt   = PyDict_New();
+    l_keywords_texts    = PyList_New(0);
+    d_keywords_cnt      = PyDict_New();
+    d_keywords_text_cnt = NULL;  /* 语料库中每个词语出现的文章数 */
     o1                  = NULL;
     o2                  = NULL;
     o3                  = NULL;
     o4                  = NULL;
     rv                  = NULL;
-    size_corpus         = PyList_Size(list_corpus);
+    n_corpus            = PyList_Size(l_corpus);
 
-    for (Py_ssize_t i = 0; i < PyList_Size(list_corpus); i++) {
-        o1 = PyList_GetItem(list_corpus, i);  /* text */
-        o2 = str_extract_keyword(o1, dict_keywords);  /* keywords list */
+    for (Py_ssize_t i = 0; i < PyList_Size(l_corpus); i++) {
+        o1 = PyList_GetItem(l_corpus, i);  /* text */
+        o2 = s_extract_keyword(o1, d_keywords);  /* keywords list */
 
         for (Py_ssize_t j = 0; j < PyList_Size(o2); j++) {
             o3 = PyList_GetItem(o2, j);  /* keyword */
-            o4 = PyDict_GetItem(dict_keywords_cnt, o3);  /* cnt */
+            o4 = PyDict_GetItem(d_keywords_cnt, o3);  /* cnt */
 
             if (o4 == NULL)  /* 还未计数 */
-                PyDict_SetItem( dict_keywords_cnt, o3, PyLong_FromLong(1) );
+                PyDict_SetItem( d_keywords_cnt, o3, PyLong_FromLong(1) );
             else
-                PyDict_SetItem( dict_keywords_cnt,
+                PyDict_SetItem( d_keywords_cnt,
                                 o3,
                                 PyNumber_Add( o4, PyLong_FromLong(1) ) );
         }
     }
 
-    PyDict_Keys(dict_keywords_cnt);
+    PyDict_Keys(d_keywords_cnt);
 
 
-    print_obj(dict_keywords_cnt);
+    print_obj(d_keywords_cnt);
     rv = Py_None;
     return rv;
 }
 
-PyObject *str_reverse(PyObject *str_text)
+PyObject *s_reverse(PyObject *s_text)
 {
     wchar_t *text, tmp;
-    Py_ssize_t size_text, idx_max, idx_stop;
+    Py_ssize_t n_text, i_max, i_stop;
 
-    text  = PyUnicode_AsWideCharString(str_text, &size_text);
-    idx_max  = size_text - 1;
-    idx_stop = (Py_ssize_t)ceil( (double)size_text / 2 );
+    text  = PyUnicode_AsWideCharString(s_text, &n_text);
+    i_max  = n_text - 1;
+    i_stop = (Py_ssize_t)ceil( (double)n_text / 2 );
 
-    for (Py_ssize_t i = 0; i < idx_stop; i++) {
+    for (Py_ssize_t i = 0; i < i_stop; i++) {
         tmp = text[i];
-        text[i] = text[idx_max-i];
-        text[idx_max-i] = tmp;
+        text[i] = text[i_max-i];
+        text[i_max-i] = tmp;
     }
 
-    return PyUnicode_FromWideChar(text, size_text);
+    return PyUnicode_FromWideChar(text, n_text);
 }

@@ -6,7 +6,7 @@ from time import time
 string_list = ['1123', '上海123', '  ', ',，']
 
 for string in string_list:
-    print(string, ': ', pyextension.str_is_pure_ascii(string))
+    print(string, ': ', pyextension.s_is_pure_ascii(string))
 
 
 print('\n--------------------------------------------------\n')
@@ -22,14 +22,14 @@ my_dict = {
 }
 
 start = time()
-key_word = pyextension.str_extract_keyword(unicode, my_dict)
+key_word = pyextension.s_extract_keyword(unicode, my_dict)
 spend = time() - start
 print(key_word)
 print('time spend: ', spend)
 
 print('\n--------------------------------------------------\n')
 
-word_tfidf = pyextension.str_cal_tfidf(unicode, my_dict)
+word_tfidf = pyextension.s_cal_tfidf(unicode, my_dict)
 print(word_tfidf)
 
 print('\n--------------------------------------------------\n')
@@ -37,7 +37,7 @@ print('\n--------------------------------------------------\n')
 unicode = ''.join(['这是一行测试文本。This is test text!'] * 10000000)
 
 start = time()
-rv = pyextension.str_reverse(unicode)
+rv = pyextension.s_reverse(unicode)
 spend = time() - start
 
 print('pyextension: ', spend)

@@ -98,13 +98,13 @@ fail:  /* 错误 */
 }
 
 static PyObject *
-pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
+pyextension_s_is_pure_ascii(PyObject *self, PyObject *args)
 {
-    PyObject *str_text;
-    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &str_text) )
+    PyObject *s_text;
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &s_text) )
         return NULL;
 
-    switch ( str_is_pure_ascii( PyUnicode_AsUTF8(str_text) ) ) {
+    switch ( s_is_pure_ascii( PyUnicode_AsUTF8(s_text) ) ) {
 
         case 0:
             return Py_False;
@@ -119,39 +119,39 @@ pyextension_str_is_pure_ascii(PyObject *self, PyObject *args)
 }
 
 static PyObject *
-pyextension_str_extract_keyword(PyObject *self, PyObject *args)
+pyextension_s_extract_keyword(PyObject *self, PyObject *args)
 {
-    PyObject *str_text, *dict_keywords;
+    PyObject *s_text, *d_keywords;
     if ( !PyArg_ParseTuple(args,
                            "O!O!",
-                           &PyUnicode_Type, &str_text,
-                           &PyDict_Type, &dict_keywords) )
+                           &PyUnicode_Type, &s_text,
+                           &PyDict_Type, &d_keywords) )
         return NULL;
 
-    return str_extract_keyword(str_text, dict_keywords);
+    return s_extract_keyword(s_text, d_keywords);
 }
 
 static PyObject *
-pyextension_str_cal_tfidf(PyObject *self, PyObject *args)
+pyextension_s_cal_tfidf(PyObject *self, PyObject *args)
 {
-    PyObject *str_text, *obj_keywords;
+    PyObject *s_text, *obj_keywords;
     if ( !PyArg_ParseTuple(args,
                            "O!O!",
-                           &PyUnicode_Type, &str_text,
+                           &PyUnicode_Type, &s_text,
                            &PyDict_Type, &obj_keywords) )
         return NULL;
 
-    return str_cal_tfidf(str_text, obj_keywords);
+    return s_cal_tfidf(s_text, obj_keywords);
 }
 
 static PyObject *
-pyextension_str_reverse(PyObject *self, PyObject *args)
+pyextension_s_reverse(PyObject *self, PyObject *args)
 {
-    PyObject *str_text;
-    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &str_text) )
+    PyObject *s_text;
+    if ( !PyArg_ParseTuple(args, "O!", &PyUnicode_Type, &s_text) )
         return NULL;
 
-    return str_reverse(str_text);
+    return s_reverse(s_text);
 }
 
 /** ====================================================================================================
@@ -161,10 +161,10 @@ pyextension_str_reverse(PyObject *self, PyObject *args)
 static PyMethodDef
 pyextension_methods[] = {
     {"test",                pyextension_test,                METH_VARARGS, "test func"},
-    {"str_is_pure_ascii",   pyextension_str_is_pure_ascii,   METH_VARARGS, "param: str_text"},
-    {"str_extract_keyword", pyextension_str_extract_keyword, METH_VARARGS, "param: str_text, dict_keywords"},
-    {"str_cal_tfidf",       pyextension_str_cal_tfidf,       METH_VARARGS, "param: str_text, dict_keywords"},
-    {"str_reverse",         pyextension_str_reverse,         METH_VARARGS, "param: str_text"},
+    {"s_is_pure_ascii",   pyextension_s_is_pure_ascii,   METH_VARARGS, "param: s_text"},
+    {"s_extract_keyword", pyextension_s_extract_keyword, METH_VARARGS, "param: s_text, d_keywords"},
+    {"s_cal_tfidf",       pyextension_s_cal_tfidf,       METH_VARARGS, "param: s_text, d_keywords"},
+    {"s_reverse",         pyextension_s_reverse,         METH_VARARGS, "param: s_text"},
     {NULL, NULL, 0, NULL},
 };
 

@@ -4,7 +4,7 @@ A python package, numpy used.
 
 ## Api
 
-- str_is_pure_ascii
-- str_extract_keyword
-- str_cal_tfidf
-- str_reverse
+- s_is_pure_ascii
+- s_extract_keyword
+- s_cal_tfidf
+- s_reverse

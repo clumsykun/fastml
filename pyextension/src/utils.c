@@ -11,12 +11,12 @@
 #include "utils.h"
 
 
-int str_is_pure_ascii(const char *text)
+int s_is_pure_ascii(const char *text)
 {
     if (text == NULL)
         return -1;
 
-    for (size_t i = 0; text[i] != '\0'; i++)
+    for (n_t i = 0; text[i] != '\0'; i++)
         if ( (int)text[i] < 0 )
             return 0;
 
