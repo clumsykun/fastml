@@ -28,6 +28,7 @@ int test_s_cal_tfidf()
 {
     PyObject *s_text1 = PyUnicode_FromString("日志 我在上海市居住了三年，我的编码是 123456。");
     PyObject *s_text2 = PyUnicode_FromString("我的编码是 123456。");
+    PyObject *s_text3 = PyUnicode_FromString("上海三年来生产总值为 XXX");
     PyObject *d_keywords = PyDict_New();
 
     PyDict_SetItemString( d_keywords, "日志", PyLong_FromLong(0) );
@@ -37,11 +38,13 @@ int test_s_cal_tfidf()
     PyDict_SetItemString( d_keywords, "三年", PyLong_FromLong(3) );
     PyDict_SetItemString( d_keywords, "我", PyLong_FromLong(4) );
     PyDict_SetItemString( d_keywords, "在", PyLong_FromLong(5) );
+    PyDict_SetItemString( d_keywords, "编码", PyLong_FromLong(5) );
 
     PyObject *l_corpus = PyList_New(0);
 
     PyList_Append(l_corpus, s_text1);
     PyList_Append(l_corpus, s_text2);
+    PyList_Append(l_corpus, s_text3);
 
     PyObject *result;
     result = s_cal_tfidf(l_corpus, d_keywords);

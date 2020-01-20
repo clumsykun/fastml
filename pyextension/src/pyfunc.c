@@ -138,42 +138,86 @@ error:
 
 PyObject *s_cal_tfidf(PyObject *l_corpus, PyObject *d_keywords)
 {
-    PyObject *rv, *l_keywords_texts;
-    PyObject *d_keywords_cnt, *d_keywords_test_cnt, *d_keywords_text_cnt;
-    PyObject *o1, *o2, *o3, *o4;
+    PyObject *rv, *l_keywords_texts, *d_idf;
+    PyObject *d_keywords_cnt, *d_keywords_cnt_all, *d_keywords_text_cnt;
+    PyObject *o1, *o2, *o3, *d;
     Py_ssize_t n_corpus;
 
-    l_keywords_texts    = PyList_New(0);
-    d_keywords_cnt      = PyDict_New();
-    d_keywords_text_cnt = NULL;  /* 语料库中每个词语出现的文章数 */
+    l_keywords_texts    = PyList_New(0);  /* 关键字列表的列表，顺序与 l_corpus 相同 */
+    d_keywords_cnt      = PyList_New(0);  /* 各文本关键字频数，顺序与 l_corpus 相同 */
+    d_keywords_cnt_all  = PyDict_New();   /* 语料库中关键字频数 */
+    d_keywords_text_cnt = PyDict_New();   /* 语料库中每个词语出现的文章数 */
+    d_idf               = PyDict_New();   /* 关键词在语料库中的 idf  */
     o1                  = NULL;
     o2                  = NULL;
     o3                  = NULL;
-    o4                  = NULL;
     rv                  = NULL;
     n_corpus            = PyList_Size(l_corpus);
 
-    for (Py_ssize_t i = 0; i < PyList_Size(l_corpus); i++) {
-        o1 = PyList_GetItem(l_corpus, i);  /* text */
-        o2 = s_extract_keyword(o1, d_keywords);  /* keywords list */
+    /* 遍历语料库 */
+    for (Py_ssize_t i = 0; i < n_corpus; i++) {
 
-        for (Py_ssize_t j = 0; j < PyList_Size(o2); j++) {
-            o3 = PyList_GetItem(o2, j);  /* keyword */
-            o4 = PyDict_GetItem(d_keywords_cnt, o3);  /* cnt */
+        o1 = s_extract_keyword(PyList_GetItem(l_corpus, i), d_keywords);  /* keywords list */
+        d = PyDict_New();  /* 文档的关键字频数 */
 
-            if (o4 == NULL)  /* 还未计数 */
-                PyDict_SetItem( d_keywords_cnt, o3, PyLong_FromLong(1) );
+        /* 遍历关键字列表 */
+        for (Py_ssize_t j = 0; j < PyList_Size(o1); j++) {
+
+            o2 = PyList_GetItem(o1, j);  /* keyword */
+            o3 = PyDict_GetItem(d_keywords_cnt_all, o2);  /* cnt total */
+
+            if (o3 == NULL)  /* 还未计数 */
+                PyDict_SetItem( d_keywords_cnt_all, o2, PyLong_FromLong(1) );
             else
-                PyDict_SetItem( d_keywords_cnt,
-                                o3,
-                                PyNumber_Add( o4, PyLong_FromLong(1) ) );
+                PyDict_SetItem( d_keywords_cnt_all,
+                                o2,
+                                PyNumber_Add( o3, PyLong_FromLong(1) ) );
+
+            o3 = PyDict_GetItem(d, o2);
+            if (o3 == NULL)  /* 还未计数 */
+                PyDict_SetItem( d, o2, PyLong_FromLong(1) );
+            else
+                PyDict_SetItem( d,
+                                o2,
+                                PyNumber_Add( o3, PyLong_FromLong(1) ) );
+        }
+        PyList_Append(d_keywords_cnt, d);
+    }
+
+    /* 遍历语料库中各文本关键字 */
+    for (Py_ssize_t i = 0; i < n_corpus; i++) {
+        o1 = PyDict_Keys( PyList_GetItem(d_keywords_cnt, i) );  /* 文档关键字列表 */
+
+        for (Py_ssize_t j = 0; j < PyList_Size(o1); j++) {
+            o2 = PyList_GetItem(o1, j);
+            o3 = PyDict_GetItem(d_keywords_text_cnt, o2);  /* cnt */
+
+            if (o3 == NULL)
+                PyDict_SetItem( d_keywords_text_cnt, o2, PyLong_FromLong(1) );
+            else
+                PyDict_SetItem( d_keywords_text_cnt,
+                                o2,
+                                PyNumber_Add(o3, PyLong_FromLong(1) ) );
         }
     }
 
-    PyDict_Keys(d_keywords_cnt);
+    /* 计算 idf */
+    o1 = PyDict_Items(d_keywords_text_cnt);
+    for (Py_ssize_t i = 0; i < PyList_Size(o1); i++) {
 
+        o2 = PyTuple_GetItem(PyList_GetItem(o1, i), 0);  /* keyword */
+        o3 = PyTuple_GetItem(PyList_GetItem(o1, i), 1);  /* 出现文档数 */
+
+        PyDict_SetItem( d_idf,
+                        o2,
+                        PyFloat_FromDouble( log10( (double)n_corpus / PyLong_AsDouble(o3) ) ) );
+
+    }
 
     print_obj(d_keywords_cnt);
+    print_obj(d_keywords_cnt_all);
+    print_obj(d_keywords_text_cnt);
+    print_obj(d_idf);
     rv = Py_None;
     return rv;
 }
